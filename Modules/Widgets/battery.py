@@ -3,38 +3,33 @@ from libqtile.widget import base
 class CustomBattery(base.InLoopPollText):
     defaults = [
         ("update_interval", 5, "Seconds between updates"),
-        ("low_percentage", 0.2, "Low battery threshold"),
+        ("low_percentage", 0.3, "Low battery threshold (30%)"),
         ("font", "SF Pro", "Font for the widget"),
     ]
 
     def __init__(self, **config):
         base.InLoopPollText.__init__(self, **config)
         self.add_defaults(CustomBattery.defaults)
-        self.foreground = "#ffffff"  # Texto siempre blanco
-        self.low_foreground = "#ff5555"  # Rojo para batería baja
+        self.normal_color = "#00FF00"  # Verde para 30%-100%
+        self.low_color = "#FFA500"    # Anaranjado para <30%
+        self.charging_color = "#FFFF00"  # Amarillo para cargando
 
     def poll(self):
         try:
-            # Leer porcentaje y estado (ajusta BAT0 si es necesario)
+            # Leer porcentaje y estado (separados en líneas distintas)
             percent = int(open("/sys/class/power_supply/BAT0/capacity", "r").read().strip())
             status = open("/sys/class/power_supply/BAT0/status", "r").read().strip()
 
-            # Calcular el nivel de llenado (5 segmentos en lugar de 10)
-            filled = int(percent / 20)  # Divide entre 20 para 5 segmentos
-            empty = 5 - filled
-            battery_bar = "█" * filled + "░" * empty
-            battery_icon = f"[{battery_bar}]"
-
-            # Indicador de carga
-            charge_icon = "⚡" if status == "Charging" else ""
-
-            # Color según el nivel de batería
-            current_foreground = self.low_foreground if percent < self.low_percentage * 100 else self.foreground
-
-            # Formato final
-            return f"{percent}% {battery_icon}{charge_icon}"
+            # Seleccionar color según el estado y porcentaje
+            if status == "Charging":
+                self.foreground = self.charging_color  # Amarillo cuando carga
+            else:
+                self.foreground = self.low_color if percent < self.low_percentage * 100 else self.normal_color
+            
+            # Solo mostrar el círculo
+            return "●"
 
         except FileNotFoundError:
-            return "Err [□□□□□]"
+            return "● Err"
         except Exception as e:
-            return f"Err: {str(e)}"
+            return f"● Err: {str(e)}"
