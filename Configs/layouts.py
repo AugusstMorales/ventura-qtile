@@ -7,11 +7,11 @@ layouts = [
     layout.Columns(
         border_focus_stack=["#000000", "#000000"],  # Sin bordes visibles
         border_width=0,                             # Minimalista
-        margin=20                                   # Espacio limpio alrededor
+        margin=30                                   # Espacio limpio alrededor
     ),
     layout.Max(
         border_width=0,                            # Sin bordes
-        margin=20                                  # Espacio consistente
+        margin=30                                  # Espacio consistente
     ),
 ]
 

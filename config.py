@@ -25,7 +25,7 @@ import subprocess
 
 # Initialize wallpaper
 def init_wallpaper():
-    subprocess.Popen(["feh", "--bg-fill", "/home/augusstmorales/.config/qtile/Assets/Wallpapers/Ventura Graphic Dark.png"])
+    subprocess.Popen(["feh", "--bg-fill", "/home/augusstmorales/.config/qtile/Assets/Wallpapers/VenturaDark.png"])
 
 # Autostart terminal and Picom
 def autostart():
